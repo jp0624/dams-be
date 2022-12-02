@@ -1,0 +1,513 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "DAMS Application API",
+    "description": "API Documentation for DAMS application back endddd",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Vehicles",
+      "description": "API for Vehicles in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/vehicle": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "description": "Display all vehicles",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Showed all vehicles",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Vehicles"
+        ],
+        "description": "Create new Vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Vehicle that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Vehicle is created",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicles"
+        ],
+        "description": "Update a vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Vehicle that we want to Update",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehicle is Updated",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      }
+    },
+    "/vehicle/{id}": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Find vehicle by ID",
+        "description": "Returns a single vehicle",
+        "operationId": "getvehicleById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of vehicle to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          }
+        }
+      }
+    },
+    "/lesson-type": {
+      "get": {
+        "tags": [
+          "Lesson Types"
+        ],
+        "description": "Display all Lesson Types",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Showed all Lesson Types",
+            "schema": {
+              "$ref": "#/definitions/Lesson_Type"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lesson Types"
+        ],
+        "description": "Create new Vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Vehicle that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Lesson_Type"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Vehicle is created",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Lesson Types"
+        ],
+        "description": "Update a vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Lesson type that we want to Update",
+            "schema": {
+              "$ref": "#/definitions/Lesson_Type"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lesson type is Updated",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      }
+    },
+    "/lesson-type/{id}": {
+      "get": {
+        "tags": [
+          "Lesson Types"
+        ],
+        "summary": "Find Lesson Type by ID",
+        "description": "Returns a single Lesson Type",
+        "operationId": "getLessonTypeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Lesson types to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Lesson_Type"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Lesson Type not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Lesson Types"
+        ],
+        "summary": "Delete Lesson type by ID",
+        "description": "Delete a single Lesson Type",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Lesson types to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Lesson Type not found"
+          }
+        }
+      }
+    },
+    "/alert": {
+      "get": {
+        "tags": [
+          "Alert Messages"
+        ],
+        "description": "Display all alert messages",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Showed all Lesson Types",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Alert Messages"
+        ],
+        "description": "Create new Vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Vehicle that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Vehicle is created",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Alert Messages"
+        ],
+        "description": "Update a vehicle in system",
+        "parameters": [
+          {
+            "name": "Vehicle",
+            "in": "body",
+            "description": "Lesson type that we want to Update",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lesson type is Updated",
+            "schema": {
+              "$ref": "#/definitions/MySqlStandardOutput"
+            }
+          }
+        }
+      }
+    },
+    "/alert/{id}": {
+      "get": {
+        "tags": [
+          "Alert Messages"
+        ],
+        "summary": "Find Alert Message by ID",
+        "description": "Returns a single Alert Message",
+        "operationId": "getAlertMessageById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Alert Message to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Alert Message not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Alert Messages"
+        ],
+        "summary": "Delete Alert Message by ID",
+        "description": "Delete a single Alert Message",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Alert Message to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Alert Message not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Vehicle": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "vehicle_id": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "last_update": {
+          "type": "string"
+        }
+      }
+    },
+    "Lesson_Type": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "type_id": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "Alert": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "alert_id": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "number"
+        }
+      }
+    },
+    "MySqlStandardOutput": {
+      "properties": {
+        "fieldCount": {
+          "type": "number"
+        },
+        "affectedRows": {
+          "type": "number"
+        },
+        "insertId": {
+          "type": "number"
+        },
+        "serverStatus": {
+          "type": "number"
+        },
+        "warningCount": {
+          "type": "number"
+        },
+        "message": {
+          "type": "number"
+        },
+        "protocol41": {
+          "type": "boolean"
+        },
+        "changedRows": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

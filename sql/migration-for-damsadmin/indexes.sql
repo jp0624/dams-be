@@ -1,0 +1,12 @@
+-- alter table `language` add index code (`code`);
+-- alter table `translation` add index country_code (`country_code`,`language_code`);
+-- alter table `country` add index code (`code`);
+-- alter table `lesson_task` add index task_id (`task_id`);  
+-- alter table `lesson_task` add index le_ta_lesson_id_idx(lesson_id);
+
+-- alter table `lesson_task` add index le_ta_lesson_id_idx(lesson_id);
+-- alter table `user` add index us_group_id_idx(group_id);
+-- alter table `user_session` add index us_user_id_idx(user_id);
+-- alter table `task_type_attr_group` ADD INDEX ta_ty_gr_attr_group_id_idx(attr_group_id);
+-- ALTER TABLE task_attr ADD index ta_attr_group_id_idx(group_id);
+-- ALTER TABLE task_attr ADD index ta_attr_type_id_idx(attr_type_id);

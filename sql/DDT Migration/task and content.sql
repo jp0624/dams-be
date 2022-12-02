@@ -1,0 +1,133 @@
+CREATE DEFINER = 'root'@'localhost'
+PROCEDURE dams_schema_int3.sp_intro_script(
+  IN LESSONCODE_IN VARCHAR(255)  
+  )
+BEGIN
+  -- Translation related declarations
+  DECLARE done int DEFAULT FALSE;
+  DECLARE lessoncode1, vehicletype1, countrycode1, languagecode1, sheetnumber1, glacode1 varchar(200);
+  DECLARE countries_list CURSOR FOR SELECT lessoncode, vehicletype, countrycode, languagecode, sheetnumber, glacode FROM v_migrationlist WHERE lessoncode =  LESSONCODE_IN AND sheetnumber = 'Do Migrate';
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  -- Lesson, Task, Task content data creation
+  --   DELETE FROM task WHERE task_id > 346;
+  --   DELETE FROM lesson_task WHERE lesson_task_id > 476;
+  --   DELETE FROM task_group WHERE task_group_id > 1542;
+  --   DELETE FROM task_content WHERE task_content_id > 4626;
+  --   DELETE FROM content WHERE content_id > 4450;
+  --   DELETE FROM translation WHERE translation_id > 43818;
+  -- Passenger vehicle
+
+  SET @VehicleType = 1;
+  SELECT @lessoncode:=LESSONCODE_IN;
+  
+  SELECT @lessonid:=lesson_id, @lesson_title:=l.name FROM lesson l WHERE l.code = @lessoncode AND l.type_id=@VehicleType;
+  SELECT @lessonid;
+  SELECT @lesson_title;
+  
+  INSERT INTO task(type_id, status_id,name,description,lock_type,lock_time,heading,display_main,display_next,display_innav) VALUES(4, 1, 'Intro', '', 1, 1000, '',0,0,1);
+  SET @task_id = LAST_INSERT_ID();
+  SELECT @task_id;
+  
+  INSERT INTO lesson_task (lesson_id, task_id, _order, menu_display, section_marker, lesson_version_id) VALUES(@lessonid, @task_id, 0, 1, 1, 0);
+  
+  INSERT INTO task_group (task_type_attr_group_id, task_id, _order) VALUE(3,  @task_id, 0);
+  SET @task_group_id = LAST_INSERT_ID();
+  SELECT @task_group_id;
+  
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 29, @lesson_title, 1);  -- VERSION ID IS Varient (table content_version) eg. default, metric, imperial
+  SET @content_id_title = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id_title);
+  SET @content_id_link_title = LAST_INSERT_ID();
+
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 10, 'Defensive Driver Training', 1); -- sub heading
+  SET @content_id2 = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id2);
+  SET @content_id_link_subheading = LAST_INSERT_ID();
+
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 30, @lesson_title, 1); -- alt text
+  SET @content_id_alt = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id_alt);
+  SET @content_id_link_alt = LAST_INSERT_ID();
+  
+  SELECT * FROM tempimagefilefinal t;
+  SET @default_image_path_left = NULL;
+  SET @default_image_path_right = NULL;
+  
+  SET @default_image_path = '/media/courses/DDT/GLOBAL/Intro/IMG01.jpg';
+  SELECT CONCAT('/media/courses/', REPLACE(SUBSTRING(t.FilePath,4), '\\', '\/')), t.CountryCode, t.LanguageCode, t.CourseCode FROM tempimagefilefinal t;
+  SELECT @default_image_path := CONCAT('/media/courses/', REPLACE(SUBSTRING(t.FilePath,4), '\\', '\/')) FROM tempimagefilefinal t WHERE T.CourseCode = @lessoncode AND T.FileName = 'IMG01.jpg' LIMIT 1; -- @lessoncode;
+  SELECT @default_image_path_left := CONCAT('/media/courses/', REPLACE(SUBSTRING(t.FilePath,4), '\\', '\/')) FROM tempimagefilefinal t WHERE T.CourseCode = @lessoncode AND T.FileName = 'IMG01-L.jpg' LIMIT 1; -- @lessoncode;
+  SELECT @default_image_path_right := CONCAT('/media/courses/', REPLACE(SUBSTRING(t.FilePath,4), '\\', '\/')) FROM tempimagefilefinal t WHERE T.CourseCode = @lessoncode AND T.FileName = 'IMG01-R.jpg' LIMIT 1; -- @lessoncode;
+  SELECT @default_image_path '@default_image_path';
+  SELECT @default_image_path_left '@default_image_path_left';
+  SELECT @default_image_path_right '@default_image_path_right';
+  
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 11, @default_image_path, 1); -- here insert default image path 
+  SET @content_id4 = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id4);
+  SET @content_id_link_defaultimage = LAST_INSERT_ID();
+  
+  IF (@default_image_path_left IS NOT NULL) THEN
+    INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 11, @default_image_path_left, 5); -- here insert default image path   
+    SET @content_id4_left = LAST_INSERT_ID();
+    INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id4_left);
+    SET @content_id_link_defaultimage_left = LAST_INSERT_ID();
+  END IF;
+  
+  IF (@default_image_path_right IS NOT NULL) THEN
+    INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 11, @default_image_path_right, 6); -- here insert default image path   
+    SET @content_id4_right = LAST_INSERT_ID();
+    INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id4_right);
+    SET @content_id_link_defaultimage_right = LAST_INSERT_ID();
+  END IF;
+  
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 68, 0, 1);
+  SET @content_id5 = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id5);
+  SET @content_id_link_zerovalue = LAST_INSERT_ID();
+
+  INSERT INTO task_content(task_group_id, attr_id, value, version_id) VALUES(@task_group_id, 65, '', 1);
+  SET @content_id6 = LAST_INSERT_ID();
+  INSERT INTO content(content_type_id, content_item_id) VALUES(2, @content_id6);
+  SET @content_id_link_svgddata = LAST_INSERT_ID();
+  
+  -- SELECT CONCAT(@content_id1, ',',@content_id2, ',',@content_id3, ',',@content_id4, ',',@content_id5, ',',@content_id6);
+
+  -- Translation data creation
+  SET @IntroTitleFinal = NULL;
+  -- DELETE FROM temp1;
+  OPEN countries_list;
+
+  read_lesson_loop: LOOP
+    
+    FETCH countries_list INTO lessoncode1, vehicletype1, countrycode1, languagecode1, sheetnumber1, glacode1;
+
+    IF done THEN
+      LEAVE read_lesson_loop;
+    END IF;
+
+    -- INSERT INTO temp1 (lessoncode, vehicletype, countrycode, languagecode, sheetnumber) SELECT lessoncode1, vehicletype1, countrycode1, languagecode1, sheetnumber1;
+      -- SELECT lessoncode, vehicletype, countrycode, languagecode, sheetnumber FROM tempmigrationlessoncountrylist t WHERE 1=2;
+
+    SET @IntroTitle = NULL;
+
+    SELECT @IntroTitle:= title FROM (SELECT DISTINCT t.CourseID, t.LessonID, t.title, IF(UPPER(LEFT(t.LangID,2))='GB', 'EN', UPPER(LEFT(t.LangID,2))) language, c.Country 'country', l.LessonCode 'lesson' FROM tempvariblesslides1 t 
+      INNER JOIN ad_main.course c ON c.CourseID = t.CourseID AND c.VehicleType = 'Passenger Vehicles' AND C.CourseType=1
+      INNER JOIN ad_main.lesson l ON l.LessonID = t.LessonID AND l.LessonTypeID=8 AND l.CourseID = c.CourseID
+        WHERE NOT l.LessonCode IS NULL AND NOT l.LessonCode = '' AND l.LessonCode=lessoncode1
+    ORDER BY l.LessonCode, c.Country) IntriTitle WHERE country = countrycode1 AND language=languagecode1;
+
+    IF (@IntroTitle IS NOT NULL AND NOT @IntroTitle = '') THEN     
+        INSERT INTO translation(type_id, content_id, value, language_code, country_code) VALUES (2, @content_id_link_title, @IntroTitle, LOWER(languagecode1), countrycode1);
+        INSERT INTO translation(type_id, content_id, value, language_code, country_code) VALUES (2, @content_id_link_alt, @IntroTitle, LOWER(languagecode1), countrycode1);
+        -- INSERT INTO translation(type_id, content_id, value, language_code, country_code) VALUES (2, 300, @IntroTitle, languagecode1, countrycode1);
+        -- SET @IntroTitleFinal := CONCAT(IFNULL(@IntroTitleFinal, ''), IFNULL(@IntroTitle,'NO-Data'));     
+        -- tr
+    END IF;
+    
+  END LOOP;
+
+  CLOSE countries_list;
+  -- SET OP := LEFT(@IntroTitleFinal,2000);
+END

@@ -1,0 +1,84 @@
+1. Backup the Target Database. (rollback purpose in case of failure)
+2. Run the new objects (02, 03)
+3. Insert data to content table and Update translation table with data (04)
+4. Alter tables to drop columns, indexes (05) - will take more time - be patient
+5. Check data and remove the duplicate entries (06)
+6. run the unique constraints (07)
+7. Run select-truefalse-valuechanges.sql (08)
+8. Make sure task-group table order starts from 0 (09)
+9. make sure task-attr table placeholder field is filled. (10)
+10. Delete the duplicate records in Translation table (11)  - will take more time - be patient
+11. Add unique key constraints in Translation table. (12)
+
+Note :
+After backup or export the db , make sure to use the below command before Functiona and procedures. 
+Also remove the CREATE DEFINER in functions and procedure ( CREATE DEFINER = 'root'@'localhost' PROCEDURE sp_task_list (IN startindex int, ... )
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+*********************************************************************************************************
+USE dams_schema_int3;
+-- Lesson versioning
+--
+-- Drop column `country_id` from table `lesson_version`
+--
+ALTER TABLE lesson_version 
+  DROP COLUMN country_id;
+
+--
+-- Drop column `language_id` from table `lesson_version`
+--
+ALTER TABLE lesson_version 
+  DROP COLUMN language_id;
+
+-- lesson_version_lang_country
+CREATE TABLE lesson_version_lang_country (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  version_id int(11) DEFAULT NULL,
+  country_code varchar(5) DEFAULT NULL,
+  language_code varchar(5) DEFAULT NULL,
+  PRIMARY KEY (id)
+)
+ENGINE = INNODB,
+CHARACTER SET utf8mb4,
+COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE lesson_version_lang_country
+ADD UNIQUE INDEX UK_lesson_version_lang_country (version_id, country_code, language_code);
+
+-- Create column `lesson_version_id` on table `lesson_task`
+--
+ALTER TABLE lesson_task 
+  ADD COLUMN lesson_version_id INT(11) DEFAULT 0;
+
+ALTER TABLE lesson_task
+ADD UNIQUE INDEX UK_lesson_task (lesson_version_id, lesson_id, task_id);
+
+ALTER TABLE lesson_task
+ADD CONSTRAINT le_ta_lesson_id FOREIGN KEY (lesson_id)
+REFERENCES lesson (lesson_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------
+-- some useful
+
+SELECT * FROM lesson l INNER JOIN lesson_version lv ON lv.lesson_id = l.lesson_id 
+  INNER JOIN lesson_version_lang_country lvlc ON lvlc.version_id = lv.version_id
+  WHERE l.code = 'DST' AND lvlc.country_code='KSA' AND lvlc.language_code='en';
+
+SELECT * FROM lesson;
+SELECT * FROM lesson_version lv;
+SELECT * FROM lesson_version_lang_country lvlc;
+SELECT * FROM lesson_task lt;
+
+SELECT * FROM lesson_task lt WHERE lt.lesson_id=53;
+
+INSERT INTO lesson_task (lesson_id, task_id,_order, menu_display, section_marker, lesson_version_id) 
+SELECT lesson_id, task_id,_order, menu_display, section_marker, 1
+  FROM lesson_task lt
+WHERE lt.lesson_id=53 ON DUPLICATE KEY UPDATE lesson_id=lt.lesson_id;
+----------------------------------------------------------------------------------------------
