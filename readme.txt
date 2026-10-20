@@ -1,26 +1,20 @@
-Configure server.js to run app on desired port. This must match any proxy server config pointing to that port.
+# Dams Be
 
-Create .env file (from .env.sample) and specify environment. (/config.js holds all settings for each environment)
+An administration API with content models, Keycloak integration, SQL and MongoDB dependencies, and spreadsheet import/export tooling.
 
-For local environment:
+## Local development
 
-NODE_ENV=dev
+Run these commands from the repository root:
 
-For qa environment:
+```sh
+npm install
+npm start
+```
 
-NODE_ENV=qa
+## Main dependencies
 
-First time you have to run npm install command once to install all the packages in packages.json
+`express`, `mysql`, `mongodb`. See `package.json` for the full dependency list and versions.
 
-$ npm install
+Configure the external services used by the application before testing data-dependent features. Use your own development credentials and keep secrets out of Git.
 
-Then you can run the node server if local: 
-
-$ node serve.js
-
-Or use nodemon - to monitor the scripts. It will rerun the server if any code change happens and useful for developers
-
-$ nodemon
-
-
-
+Copy `.env.sample` to `.env`, choose `NODE_ENV=dev` or `NODE_ENV=qa`, and review `config.js` for the matching service settings. Keep the server port consistent with the reverse proxy.
